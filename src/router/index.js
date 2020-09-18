@@ -1,29 +1,45 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-
-Vue.use(VueRouter)
-
-  const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
-const router = new VueRouter({
-  mode: 'history',
+import Router from 'vue-router'
+import Login from '../views/login'
+import Layout from '../views/layout'
+import NotFound from '../views/errorPage/404'
+import Home from '../views/home'
+Vue.use(Router)
+export default new Router({
   base: process.env.BASE_URL,
-  routes
+  routes: [{
+    path: '/login',
+    name:'login',
+    component: Login
+  }]
 })
 
-export default router
+export const PublicLoginRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    name: 'layout',
+    redirect: 'home',
+    meta: {
+      name: '首页',
+      requiresAuth: true,
+    },
+    children: [
+      {
+        id: 1,
+        path: 'home',
+        component: Home,
+        name: 'home',
+        meta: {
+          name: '首页',
+          icon: 'el-icon-s-home'
+        }
+      }
+    ]
+  },
+  {
+    path: '*',
+    name: '404',
+    component: NotFound
+  }
+]
