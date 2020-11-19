@@ -31,7 +31,7 @@ export default {
   },
   actions: {
     fetchUserinfo({ commit, state }){
-      commit('setAvatar',"admin.gif")
+      commit('setAvatar',"images/avatar.png")
       commit('setAccount',"admin")
       let MainContainer = PublicLoginRoutes.find(v => v.name === 'layout')
       let children = MainContainer.children

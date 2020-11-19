@@ -2,31 +2,34 @@
     <div class="login-container">
         <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
             <h3 class="title">后台管理系统</h3>
-            <el-form-item prop="username">
+            <el-form-item prop="userAccount">
                 <span class="svg-container svg-container_login">
-                    <svg-icon icon-class="user" />
+                    <i class="el-icon-user-solid"></i>
                 </span>
-                <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+                <el-input name="userAccount" type="text" v-model="loginForm.userAccount" autoComplete="on" placeholder="用户账号" />
             </el-form-item>
             <el-form-item prop="password">
-                <span class="svg-container">
-                    <svg-icon icon-class="password"></svg-icon>
+                <span class="svg-container svg-container_login">
+                    <i class="el-icon-s-goods"></i>
                 </span>
                 <el-input name="password" :type="pwdType" @keyup.enter.native="login" v-model="loginForm.password" autoComplete="on"
-                          placeholder="password"></el-input>
-                <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+                          placeholder="用户密码"></el-input>
+                <span class="show-pwd" @click="showPwd">
+                    <i class="el-icon-sunrise"></i>
+                </span>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="login">
-                    Sign in
+                <el-button type="primary" style="width:100%;" :loading="loading" @click="login('loginForm')">
+                    登&nbsp;&nbsp;&nbsp;&nbsp;录
                 </el-button>
             </el-form-item>
-            <div class="tips">用户为admin的时候，能够看到所有的权限列表，其余账号只能看到部分</div>
+            <!--<div class="tips">用户为admin的时候，能够看到所有的权限列表，其余账号只能看到部分</div>-->
         </el-form>
     </div>
 </template>
 
 <script>
+    import { userAccesstoken } from '@/api/userapi'
     export default {
         data() {
             const validateUsername = (rule, value, callback) => {
@@ -45,11 +48,11 @@
             }
             return {
                 loginForm: {
-                    username: 'admin',
-                    password: '123456'
+                    userAccount: 'admin_1',
+                    password: 'admin'
                 },
                 loginRules: {
-                    username: [
+                    userAccount: [
                         {
                             required: true,
                             trigger: 'blur',
@@ -72,16 +75,27 @@
                     this.pwdType = 'password'
                 }
             },
-            async login() {
+            login(formName) {
                 try {
-                    //let data = await login(this.loginForm)
-                    let token = "sssss"
-                    this.$store.commit('loginIn', token)
-                    this.$router.replace('/')
+                    debugger;
+                    let  _this = this;
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            let data =  userAccesstoken(this.loginForm).then(data=>{
+                                let token = data.accessToke
+                                _this.$store.commit('loginIn', token)
+                                _this.$router.replace('/').catch(err => {
+                                    console.log(err)
+                                })
+                            })
+                        } else {
+                            return false;
+                        }
+                    });
                 } catch (e) {
                     console.log(e)
                 }
-            }
+            },
         }
     }
 </script>

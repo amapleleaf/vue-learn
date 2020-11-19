@@ -102,7 +102,7 @@ th,
 i,
 var {
   font-style: normal;
-  font-weight: 500;
+  /*font-weight: 500;*/
 }
 
 ol,
@@ -169,3 +169,6 @@ a:link {
   }
 }
 
+.pagination-bar{
+  margin: 15px 0;
+}

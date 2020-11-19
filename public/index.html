@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!--<title><%= htmlWebpackPlugin.options.title %></title>-->
+    <title>admin</title>
   </head>
   <body>
     <noscript>
@@ -13,5 +14,12 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <div class="ajax-loading" id="ajaxLoading" style="display: none;">
+      <div class="overlay"></div>
+      <div class="loading">
+        <img src="<%= BASE_URL %>loading.gif" alt="">
+        <span>加载中，请稍后...</span>
+      </div>
+    </div>
   </body>
 </html>
