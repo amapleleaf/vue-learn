@@ -31,6 +31,14 @@ router.beforeEach((to, from, next) => {
 })
 router.afterEach((to, from, next) => {
   var routerList = to.matched
+  routerList.forEach(item =>{
+    for(var i=0;i<routerList.length;i++) {
+      if (routerList[i].name && routerList[i].name == item.name) {
+        item["isParent"] = true;
+        break;
+      }
+    }
+  })
   store.commit('setCrumbList', routerList)
   store.commit('userinfo/setCurrentMenu', to.name)
 })

@@ -80,10 +80,10 @@
           <el-input v-else v-model="dataForm.userAccount" placeholder="账号"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="userName">
-          <el-input v-model="dataForm.userName" placeholder="真实姓名"></el-input>
+          <el-input v-model="dataForm.userName" placeholder="姓名"></el-input>
         </el-form-item>
         <el-form-item v-if="!editUserFlag" label="密码" prop="password">
-          <el-input type="password" v-model="dataForm.password" autocomplete="off"></el-input>
+          <el-input type="password" v-model="dataForm.password" placeholder="密码" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="账号状态" prop="locked">
           <el-select v-model="dataForm.locked" placeholder="账号状态">
@@ -249,6 +249,15 @@
           this.dataForm[x] ='';
         }
         this.$refs.editUserForm.resetFields();
+      },
+      handleResetPwd(){
+        this.$message({
+          showClose: true,
+          message: '暂不支持重置密码',
+          type: 'warning',
+          duration:5000,
+          showClose:true
+        });
       }
     }
 

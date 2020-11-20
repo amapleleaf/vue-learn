@@ -6,15 +6,22 @@
             @click="toggleNavCollapse"
         >
         </span>
-        <el-breadcrumb separator="/">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
             <transition-group name="breadcrumb">
                 <!-- 防止面包屑导航出现 首页/首页， v-if="route.name!='home'" -->
                 <template v-for="(route,i) in crumbList">
                     <el-breadcrumb-item
                         :key="route.name"
                         :to="{name:route.name}"
-                        v-if="route.name!='home' && route.meta.name!='首页'"
+                        v-if="route.name!='home' && route.name!='layout'&& !route.isParent"
                         :class="{'is-last-link':i==crumbList.length-1}"
+                    >
+                        {{route.meta.name}}
+                    </el-breadcrumb-item>
+                    <el-breadcrumb-item
+                            :key="route.name"
+                            v-else-if="route.name!='home' && route.name!='layout'"
+                            :class="{'is-last-link':i==crumbList.length-1}"
                     >
                         {{route.meta.name}}
                     </el-breadcrumb-item>
