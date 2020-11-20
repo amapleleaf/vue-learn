@@ -126,7 +126,9 @@ http.post = function(url, data, options) {
                     resolve(response.data)
                 } else {
                     Message.error({
-                        message: response.msg
+                        message: response.msg,
+                        showClose:true,
+                        duration:5000
                     })
                     reject(response.message)
                 }

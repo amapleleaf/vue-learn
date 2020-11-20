@@ -5,3 +5,6 @@ export function userAccesstoken(param) {
 export function querySysUserList(param) {
     return axios.post('/user/querySysUserList',param)
 }
+export function saveSysUser(param) {
+    return axios.post('/user/saveSysUser',param)
+}

@@ -6,10 +6,11 @@
 </template>
 
 <script>
-import sidebarNav from './component/sidebar-nav'
-import mainContent from './component/main-content/index'
+import SidebarNav from './component/sidebar-nav'
+import MainContent from './component/main-content/index'
 import { mapState } from 'vuex'
 export default {
+    name:"Layout",
     data() {
         return {}
     },
@@ -17,8 +18,8 @@ export default {
         ...mapState(['isSidebarNavCollapse'])
     },
     components: {
-        sidebarNav,
-        mainContent
+        SidebarNav,
+        MainContent
     }
 }
 </script>

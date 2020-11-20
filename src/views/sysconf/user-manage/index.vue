@@ -18,7 +18,7 @@
       </el-form-item>
     </el-form>
     <div  class="tools-bar">
-      <el-button type="primary"  icon="el-icon-plus" size="mini" @click="addSysUser">新增用户</el-button>
+      <el-button type="primary"  icon="el-icon-plus" size="mini" @click="handleAddSysUser()">新增用户</el-button>
     </div>
     <el-table
             :data="tableData"
@@ -52,7 +52,7 @@
                     type="text"
                     size="small"
                     @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >修改</el-button>
             <el-button
                     type="text"
                     size="small"
@@ -72,14 +72,18 @@
               :total="totalRecord">
       </el-pagination>
     </div>
-    <el-dialog :title="editDialogTile" :visible.sync="editDialogVisible" @close="editDialogClose()">
-      <el-form ref="dataForm" :rules="rules" :model="dataForm" label-width="80px">
+    <el-dialog :title="editUserFlag?'修改用户信息':'新增用户'" :visible.sync="editDialogVisible" width="460px" @close="editDialogClose()">
+      <el-form ref="editUserForm" :rules="rules" :model="dataForm" label-width="80px">
+        <input name="userId" type="hidden" v-model="dataForm.userId"  />
         <el-form-item label="账号" prop="userAccount">
-          <template v-if="editDialogTile=='修改用户信息'">{{dataForm.userAccount}}</template>
+          <template v-if="editUserFlag">{{dataForm.userAccount}}</template>
           <el-input v-else v-model="dataForm.userAccount" placeholder="账号"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="userName">
           <el-input v-model="dataForm.userName" placeholder="真实姓名"></el-input>
+        </el-form-item>
+        <el-form-item v-if="!editUserFlag" label="密码" prop="password">
+          <el-input type="password" v-model="dataForm.password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="账号状态" prop="locked">
           <el-select v-model="dataForm.locked" placeholder="账号状态">
@@ -90,22 +94,23 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button plain @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" plain @click="editDialogSubmit()" v-if="editDialogTile=='修改用户信息'">保存</el-button>
+        <el-button type="primary" plain @click="editDialogSubmit()" v-if="editUserFlag">保存</el-button>
         <el-button type="primary" plain @click="editDialogSubmit()" v-else>立即创建</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-  import {querySysUserList} from '@/api/userapi'
+  import {querySysUserList,saveSysUser} from '@/api/userapi'
   export default {
+    name:"UserManage",
     data() {
       return {
         pageSize: 10,
         totalRecord: 0,
         pageNum:1,
         editDialogVisible:false,
-        editDialogTile:'',
+        editUserFlag:true,
         searchUser: {
           userAccount: '',
           userName: '',
@@ -115,6 +120,7 @@
           userId: '',
           userAccount: '',
           userName: '',
+          password:'',
           locked:''
         },
         tableData: [
@@ -124,10 +130,10 @@
           {userAccount: 'admin4',userName: '王小虎4',locked: '1'}
         ],
         rules: {
-          loginName: [
+          userAccount: [
             {
-              userAccount: true,
-              message: '账号不能为空',
+              required: true,
+              message: '请填写账号',
               trigger: 'blur'
             },
             {
@@ -140,7 +146,7 @@
           userName: [
             {
               required: true,
-              message: '真实姓名不能为空',
+              message: '请填写姓名',
               trigger: 'blur'
             },
             {
@@ -150,10 +156,23 @@
               trigger: 'blur'
             }
           ],
+          password: [
+            {
+              required: true,
+              message: '请填写密码',
+              trigger: 'blur'
+            },
+            {
+              min: 6,
+              max: 20,
+              message: '密码长度在 6 到 20 个字符',
+              trigger: 'blur'
+            }
+          ],
           locked: [
             {
               required: true,
-              message: '联系电话不能为空',
+              message: '请选择账号状态',
               trigger: 'blur'
             }
           ]
@@ -177,8 +196,9 @@
           this.totalRecord = data.total;
         });
       },
-      addSysUser(){
-        alert("addSysUser");
+      handleAddSysUser(){
+        this.editUserFlag=false
+        this.editDialogVisible = true;
       },
       handleSizeChange(val){
         this.pageSize = val;
@@ -188,21 +208,47 @@
         this.searchSubmit({ pageNum: val });
       },
       handleEdit(index, row) {
-        this.editDialogVisible = true
-        this.editDialogTile = '修改用户信息'
+        this.editUserFlag=true;
+        this.editDialogVisible = true;
         for (let x of Object.keys(this.dataForm)) {
-            this.dataForm[x] = row[x]
+            this.dataForm[x] = row[x];
         }
       },
-      handleAdd(){
-        this.editDialogVisible = true;
-        this.editDialogTile='新增用户'
-      },
       editDialogSubmit() {
+        let _this = this;
+        this.$refs["editUserForm"].validate((valid) => {
+            if (valid) {
+              if(this.editUserFlag){
+                this.$message({
+                  showClose: true,
+                  message: '暂不支持修改用户信息',
+                  type: 'warning',
+                  duration:5000,
+                  showClose:true
+                });
+                _this.editDialogClose();
+                _this.editDialogVisible=false;
+              }else {
+                saveSysUser(this.dataForm).then(data => {
+                  this.$message({
+                    showClose: true,
+                    message: '用户添加成功',
+                    type: 'success'
+                  });
+                  _this.editDialogClose();
+                  _this.editDialogVisible=false;
+                })
+              }
+        } else {
+            return false;
+        }});
 
       },
       editDialogClose() {
-        this.$refs.dataForm.resetFields()
+        for (let x of Object.keys(this.dataForm)) {
+          this.dataForm[x] ='';
+        }
+        this.$refs.editUserForm.resetFields();
       }
     }
 
