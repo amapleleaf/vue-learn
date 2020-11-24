@@ -76,7 +76,11 @@
       <el-form ref="editUserForm" :rules="rules" :model="dataForm" label-width="80px">
         <input name="userId" type="hidden" v-model="dataForm.userId"  />
         <el-form-item label="账号" prop="userAccount">
-          <template v-if="editUserFlag">{{dataForm.userAccount}}</template>
+          <template v-if="editUserFlag">
+            <span style="padding: 0 15px">
+              {{dataForm.userAccount}}
+            </span>
+          </template>
           <el-input v-else v-model="dataForm.userAccount" placeholder="账号"></el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="userName">

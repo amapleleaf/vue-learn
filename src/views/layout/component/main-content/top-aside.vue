@@ -13,7 +13,7 @@
                     <el-breadcrumb-item
                         :key="route.name"
                         :to="{name:route.name}"
-                        v-if="route.name!='home' && route.name!='layout'&& !route.isParent"
+                        v-if="route.name!='Home' && route.name!='Layout'&& !route.isParent"
                         :class="{'is-last-link':i==crumbList.length-1}"
                     >
                         {{route.meta.name}}

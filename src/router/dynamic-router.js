@@ -1,5 +1,6 @@
 const SysConf = () => import('../views/sysconf')
 const UserManage = () => import('../views/sysconf/user-manage')
+const RoleManage = () => import('../views/sysconf/role-manage')
 const YourAbout = () => import('../views/sysconf/your-about')
 /*所有需要权限判断的路由 */
 const dynamicRoutes = [
@@ -22,8 +23,17 @@ const dynamicRoutes = [
         }
       },
       {
+        path: 'rolemanage',
+        name: 'RoleManage',
+        component: RoleManage,
+        meta: {
+          name: '角色管理',
+          icon: 'el-icon-s-custom'
+        }
+      },
+      {
         path: 'yourabout',
-        name: 'your-about',
+        name: 'YourAbout',
         component: YourAbout,
         meta: {
           name: '关于你',

@@ -29,8 +29,8 @@ export const PublicLoginRoutes = [
   {
     path: '/',
     component: Layout,
-    name: 'layout',
-    redirect: 'home',
+    name: 'Layout',
+    redirect: 'Home',
     meta: {
       name: '首页',
       requiresAuth: true,
@@ -40,7 +40,7 @@ export const PublicLoginRoutes = [
         id: 1,
         path: 'home',
         component: Home,
-        name: 'home',
+        name: 'Home',
         meta: {
           name: '首页',
           icon: 'el-icon-s-home'

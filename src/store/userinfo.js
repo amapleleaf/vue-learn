@@ -1,5 +1,7 @@
 import router, { PublicLoginRoutes } from '@/router'
 import dynamicRouter from '@/router/dynamic-router'
+import { getLoginUserInfo } from '@/api/userapi'
+import {recursionRouter} from '@/util/recursion-router'
 export default {
   namespaced:true,
   state: {
@@ -30,14 +32,19 @@ export default {
     }
   },
   actions: {
-    fetchUserinfo({ commit, state }){
-      commit('setAvatar',"images/avatar.png")
-      commit('setAccount',"admin")
-      let MainContainer = PublicLoginRoutes.find(v => v.name === 'layout')
-      let children = MainContainer.children
-      commit('setMenu', [...children, ...dynamicRouter])
+    async fetchUserinfo({commit, state}) {
+      debugger;
+      let userInfo = await getLoginUserInfo();
+      commit('setAvatar', "images/avatar.png");
+      commit('setAccount', userInfo.userName);
+      let routes = recursionRouter(userInfo.menuCodeList, dynamicRouter);
+      let MainContainer = PublicLoginRoutes.find(v => v.name === 'Layout');
+      let children = MainContainer.children;
       commit('setControlList', [...children, ...dynamicRouter])
-      children.push(...dynamicRouter)
+      if(routes&&routes.length>0) {
+        children.push(...routes);
+      }
+      commit('setMenu', children);
       router.addRoutes(PublicLoginRoutes)
     }
   }
